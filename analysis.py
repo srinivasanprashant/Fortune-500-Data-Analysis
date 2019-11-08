@@ -46,4 +46,23 @@ zero_previous_rank = f500["previous_rank"].value_counts().loc[0]
 f500.describe()
 f500_numerics = f500.select_dtypes(include=np.number)
 max_f500 = f500_numerics.max(axis=0)
+# alternatively, we could use the line of code below:
+max_f500_alt = f500.max(numeric_only=True)
 
+# Update a value in the dataframe
+f500.loc["Dow Chemical", "ceo"] = "Jim Fitterling"
+# temporaly display 999 rows
+# with pd.option_context('display.max_rows', 999):
+#     print(f500["ceo"])
+motor_bool = f500["industry"] == "Motor Vehicles and Parts"
+motor_countries = f500.loc[motor_bool,"country"]
+prev_rank_before = f500["previous_rank"].value_counts(dropna=False).head()
+# Boolean indexing to update values in the previous_rank column of the f500 dataframe
+previous_rank_bool = f500["previous_rank"] == 0
+f500.loc[previous_rank_bool,"previous_rank"] = np.nan
+prev_rank_after = f500["previous_rank"].value_counts(dropna=False).head()
+bool_usa = f500["country"] == "USA"
+industry_usa = f500.loc[bool_usa,"industry"].value_counts().head(2)
+
+bool_china = f500["country"] == "China"
+sector_china = f500.loc[bool_china,"sector"].value_counts().head(3)
